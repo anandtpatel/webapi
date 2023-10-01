@@ -1,0 +1,70 @@
+name: .NET Core Desktop
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: MyWpfApp.sln
+      Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
+      Wap_Project_Directory: MyWpfApp.Package
+      Wap_Project_Path: MyWpf.App.Package\MyWpfApp.Package.wapproj
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2 # Updated to v2 for improved performance and features
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v2 # Updated to v2 for improved performance and features
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Build and test
+      run: |
+        dotnet build ${{ env.Solution_Name }} --configuration ${{ matrix.configuration }}
+        dotnet test ${{ env.Test_Project_Path }} --configuration ${{ matrix.configuration }}
+      env:
+        DOTNET_CLI_TELEMETRY_OPTOUT: true # Disable .NET CLI telemetry
+
+    - name: Restore the application
+      run: |
+        msbuild ${{ env.Solution_Name }} /t:Restore /p:Configuration=${{ matrix.configuration }}
+        msbuild ${{ env.Solution_Name }} /t:Build /p:Configuration=${{ matrix.configuration }}
+      env:
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Skip first-time experience for dotnet restore
+
+    - name: Decode the pfx
+      run: |
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
+        $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
+        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+
+    - name: Create the app package
+      run: |
+        msbuild ${{ env.Wap_Project_Path }} /p:Configuration=${{ matrix.configuration }} /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Always /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+      env:
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Skip first-time experience for msbuild
+        DOTNET_CLI_TELEMETRY_OPTOUT: true # Disable .NET CLI telemetry
+        MSBUILDDISABLENODEREUSE: 1 # Disable MSBuild node reuse for isolation
+
+    - name: Remove the pfx
+      run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2 # Updated to v2 for improved performance and features
+      with:
+        name: MSIX Package
+        path: ${{ env.Wap_Project_Directory }}/AppPackages
