@@ -11,7 +11,6 @@ on:
 env:
   AWS_REGION: us-east-2                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: weatherforecast         # set this to your Amazon ECR repository name
-  ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
   AWS_ACCOUNT_ID: 824950946491
 
 jobs:
