@@ -72,23 +72,9 @@ jobs:
         
   deploy:
       needs: build
-
       runs-on: [ip-192-168-48-80]
-
       steps:
         - name: Pull Docker image from Amazon ECR
-          run: |
-            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_RUN_NUMBER
-          env:
-            AWS_REGION: ${{ env.AWS_REGION }}
-            AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID }}
-            ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
-
+          run: docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_RUN_NUMBER
         - name: Run Docker container
-          run: |
-            docker run -d --name your-container-name -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_RUN_NUMBER
-          env:
-            AWS_REGION: ${{ env.AWS_REGION }}
-            AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID }}
-            ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
-          continue-on-error: true
+          run: docker run -d --name weatherreport -p 80:80 $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_RUN_NUMBER
