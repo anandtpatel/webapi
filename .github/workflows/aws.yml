@@ -72,7 +72,7 @@ jobs:
         
   deploy:
       needs: build
-      runs-on: [ip-192-168-48-80]
+      runs-on: [Linux]
       steps:
         - name: Pull Docker image from Amazon ECR
           run: docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_RUN_NUMBER
