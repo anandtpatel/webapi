@@ -67,6 +67,7 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         docker build -t weatherforecast .
+        docker tag weatherforecast:latest 824950946491.dkr.ecr.us-east-2.amazonaws.com/weatherforecast:latest
         docker push 824950946491.dkr.ecr.us-east-2.amazonaws.com/weatherforecast:latest
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
         
