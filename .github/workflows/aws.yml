@@ -73,10 +73,6 @@ jobs:
   deploy:
       needs: build
       runs-on: [Linux]
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-        #REGISTRY_ALIAS: z8a4f8r0
-        IMAGE_TAG: ${{ github.sha }}
       steps:
         - name: Pull Docker image from Amazon ECR
           run: docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_RUN_NUMBER
