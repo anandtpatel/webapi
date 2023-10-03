@@ -66,15 +66,15 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$latest .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$latest
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$latest"
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
         
   deploy:
       needs: build
       runs-on: [Linux]
       steps:
         - name: Pull Docker image from Amazon ECR
-          run: docker pull weatherforecast/weatherforecast:$latest
+          run: docker pull weatherforecast/weatherforecast:latest
         - name: Run Docker container
-          run: docker run -d --name weatherreport -p 80:80 weatherforecast/weatherforecast:$latest
+          run: docker run -d --name weatherreport -p 80:80 weatherforecast/weatherforecast:latest
