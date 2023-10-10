@@ -73,7 +73,7 @@ jobs:
         
   deploy:
       needs: build
-      runs-on: [ip-172-31-42-147]
+      runs-on: [Linux]
       steps:
         - name: docker login ec2
           run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 220379707701.dkr.ecr.us-east-1.amazonaws.com
