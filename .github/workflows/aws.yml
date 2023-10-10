@@ -31,7 +31,7 @@ on:
   pull_request:
     branches: [ "main" ]
 env:
-  AWS_REGION: us-east-2                   # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: weatherforecast         # set this to your Amazon ECR repository name
   
 permissions:
@@ -67,8 +67,8 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         docker build -t weatherforecast .
-        docker tag weatherforecast:latest 824950946491.dkr.ecr.us-east-2.amazonaws.com/weatherforecast:latest
-        docker push 824950946491.dkr.ecr.us-east-2.amazonaws.com/weatherforecast:latest
+        docker tag weatherforecast:latest 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast:latest
+        docker push 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast:latest
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
         
   deploy:
@@ -76,8 +76,8 @@ jobs:
       runs-on: [Linux]
       steps:
         - name: docker login ec2
-          run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 824950946491.dkr.ecr.us-east-2.amazonaws.com
+          run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 220379707701.dkr.ecr.us-east-1.amazonaws.com
         - name: Pull Docker image from Amazon ECR
-          run: docker pull 824950946491.dkr.ecr.us-east-2.amazonaws.com/weatherforecast:latest
+          run: docker pull 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast:latest
         - name: Run Docker container
-          run: docker run -d --name weatherreport -p 5000:5000 824950946491.dkr.ecr.us-east-2.amazonaws.com/weatherforecast
+          run: docker run -d --name weatherreport -p 5000:5000 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast
