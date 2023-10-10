@@ -31,7 +31,7 @@ on:
   pull_request:
     branches: [ "main" ]
 env:
-  AWS_REGION: us-east-2                   # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: weatherforecast         # set this to your Amazon ECR repository name
   
 permissions:
@@ -88,4 +88,4 @@ jobs:
             echo "ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}"
             echo "IMAGE_TAG: ${{ env.IMAGE_TAG }}"
             sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
-            sudo docker run -d --name weatherforecast -p 80:80 824950946491.dkr.ecr.us-east-2.amazonaws.com/weatherforecast:latest
+            sudo docker run -d --name weatherforecast -p 80:80 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast:latest
