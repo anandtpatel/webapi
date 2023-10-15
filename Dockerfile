@@ -6,18 +6,18 @@ EXPOSE 80
 # Use the official .NET Core SDK image to build the application
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["WeatherForecastApi.csproj", "."]
-RUN dotnet restore "./WeatherForecastApi.csproj"
+COPY ["WebAPI/WebAPI.csproj", "."]
+RUN dotnet restore "WebAPI/WebAPI.csproj"
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "WeatherForecastApi.csproj" -c Release -o /app/build
+WORKDIR "/src/WebAPI"
+RUN dotnet build "WebAPI.csproj" -c Release -o /app/build
 
 # Publish the application
 FROM build AS publish
-RUN dotnet publish "WeatherForecastApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "WebAPI.csproj" -c Release -o /app/publish
 
 # Create the final runtime image
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WeatherForecastApi.dll"]
+ENTRYPOINT ["dotnet", "WebAPI.dll"]
