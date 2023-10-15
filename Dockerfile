@@ -1,7 +1,7 @@
 # Use the official .NET Core runtime image as a parent image
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
-EXPOSE 8081
+EXPOSE 5000
 
 # Use the official .NET Core SDK image to build the application
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
