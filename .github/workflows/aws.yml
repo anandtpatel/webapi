@@ -80,4 +80,4 @@ jobs:
         - name: Pull Docker image from Amazon ECR
           run: docker pull 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast:latest
         - name: Run Docker container
-          run: docker run -d --name <MAJOR-NUMBER>.${{ github.run_number }} -p 80:80 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast
+          run: docker run -d --name weatherforecast.${{ github.run_number }} -p 80:80 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast
