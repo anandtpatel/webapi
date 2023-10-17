@@ -79,6 +79,7 @@ jobs:
           run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 220379707701.dkr.ecr.us-east-1.amazonaws.com
         - name: Run Docker clean
           run: docker ps -a -q
+        - name: Run Docker Prune
           run: docker system prune -f
         - name: Pull Docker image from Amazon ECR
           run: docker pull 220379707701.dkr.ecr.us-east-1.amazonaws.com/weatherforecast:latest
